@@ -45,7 +45,7 @@ export default {
           top: `${this.position.top}px`,
           right: `${this.position.right}px`,
           height: "80vh",
-          width: "240px",
+          width: "250px",
           position: "absolute",
           transform: "translateY(-50%)",
         };
@@ -54,7 +54,7 @@ export default {
           top: "0px",
           right: "0px",
           height: "100vh",
-          width: "240px",
+          width: "250px",
           position: "relative",
         };
       }
@@ -145,7 +145,7 @@ export default {
 }
 #wp-content {
   display: grid;
-  grid-template-columns: auto 240px;
+  grid-template-columns: auto 250px;
 
   &.active {
     grid-template-columns: auto;

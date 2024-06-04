@@ -1,3 +1,7 @@
+#style-manager-container{
+    margin-top: 5px;
+}
+
 .gjs-sm-sector {
     background-color: #fff;
 }
@@ -194,4 +198,8 @@
 
 .gjs-sm-property__border-color.gjs-sm-property{
     width: 100%!important;
+}
+
+.gjs-radio-item{
+    padding: 7px 0px;
 }

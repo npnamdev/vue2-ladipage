@@ -18,7 +18,7 @@
 
 .tab-buttons {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, auto);
 }
 
 button {
@@ -31,11 +31,25 @@ button {
     font-weight: 700;
     border-bottom: 1px solid #e0d4d4;
     font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+
+    .icon{
+        color: #000!important;
+        width: 14px!important;
+    }
 }
 
 button.active {
     color: blue;
     border-bottom: 1px solid blue;
+    .icon{
+        color: blue!important;
+        width: 14px!important;
+    }
 }
 
 .tab-content {
@@ -91,4 +105,44 @@ button.active {
         font-size: 12px;
         font-weight: 500;
     }
+    .gjs-trt-trait{
+        padding: 0;
+    }
+}
+
+.gjs-clm-tags{
+    padding: 0px 0px;
+    padding-top: 8px;
+}
+
+.gjs-selected .gjs-layer-item{
+    background-color: #FAF3F3!important;
+}
+
+.gjs-three-bg {
+    background-color: #e2d4d4!important;
+    color: #000;
+
+    svg{
+        fill: #000;
+    }
+}
+
+.gjs-clm-tags #gjs-clm-tags-field {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    padding: 3px;
+}
+
+.gjs-field{
+    height: auto;
+}
+
+.gjs-clm-tag{
+    margin: 0!important;
+}
+
+#gjs-clm-up .gjs-clm-label{
+    font-weight: 700!important;
 }

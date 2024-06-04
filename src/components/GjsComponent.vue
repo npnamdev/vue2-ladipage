@@ -41,31 +41,31 @@
             :toggleFloating="toggleFloating"
             :toggleBox="toggleBox"
           >
-            <!-- <div class="wp">
-              <div id="layers-container"></div>
-            </div> -->
-
             <div>
               <div class="tab-buttons">
                 <button
                   v-for="tab in tabs"
                   :key="tab"
-                  @click="selectTab(tab)"
-                  :class="{ active: currentTab === tab }"
+                  @click="selectTab(tab.type)"
+                  :class="{ active: currentTab === tab.type }"
                 >
-                  {{ tab }}
+                  <icon :is="tab.icon" class="icon" stroke-width="1.5" />
+                  <span>{{ tab.title }}</span>
                 </button>
               </div>
               <div class="tab-content">
                 <div class="item-manage" v-show="currentTab === 'Styles'">
+                  <div id="selector-container"></div>
                   <div id="style-manager-container"></div>
                 </div>
                 <div class="item-manage" v-show="currentTab === 'Properties'">
                   <div id="traits-container"></div>
-                  <!-- <div id="dev"></div> -->
                 </div>
                 <div class="item-manage" v-show="currentTab === 'Layers'">
                   <div id="layers-container"></div>
+                </div>
+                <div class="item-manage" v-show="currentTab === 'Blocks'">
+                  <div id="dev"></div>
                 </div>
               </div>
             </div>
@@ -73,15 +73,7 @@
         </div>
       </template>
     </MainLayout>
-
-
-     <div id="dev2"></div>
-    <div id="dev"></div>
-    <div id="style-manager-container"></div> 
-
     <div id="nam"></div>
-    <div id="traits-container"></div> 
-    <div id="style-manager-container"></div>
     <div id="blocks"></div>
   </div>
 </template>
@@ -101,7 +93,7 @@ import MainLayout from "./MainLayout.vue";
 import HeaderComponent from "./HeaderComponent.vue";
 import SidebarLeft from "./SidebarLeft.vue";
 import SidebarRight from "./SidebarRight.vue";
-
+import { PencilRuler, Settings, Layers, LayoutGrid} from "lucide-vue";
 import "./graperCss/panelManage.scss";
 import "./graperCss/blockManage.scss";
 import "./graperCss/layerManage.scss";
@@ -112,7 +104,28 @@ export default {
   name: "GrapesEditor",
   data() {
     return {
-      tabs: ["Styles", "Properties", "Layers"],
+      tabs: [
+        {
+          type: "Styles",
+          title: "Kiểu",
+          icon: PencilRuler,
+        },
+        {
+          type: "Properties",
+          title: "Thuộc tính",
+          icon: Settings,
+        },
+        {
+          type: "Layers",
+          title: "Lớp",
+          icon: Layers,
+        },
+        {
+          type: "Blocks",
+          title: "Thành phần",
+          icon: LayoutGrid,
+        },
+      ],
       currentTab: "Styles",
     };
   },
@@ -121,7 +134,13 @@ export default {
       this.currentTab = tab;
     },
   },
-  components: { MainLayout, HeaderComponent, SidebarLeft, SidebarRight },
+  components: {
+    MainLayout,
+    HeaderComponent,
+    SidebarLeft,
+    SidebarRight,
+    PencilRuler,
+  },
   mounted() {
     document.addEventListener("mousedown", this.handleClickOutside);
     this.editor = grapesjs.init({
@@ -146,9 +165,81 @@ export default {
       },
       styleManager: {
         appendTo: "#style-manager-container",
+        sectors: [
+          {
+            name: "Thiết lập chung",
+            open: true,
+            buildProps: [
+              "float",
+              "display",
+              "position",
+              "top",
+              "right",
+              "left",
+              "bottom",
+            ],
+          },
+          {
+            name: "Bố trí",
+            open: false,
+            buildProps: [
+              "width",
+              "height",
+              "max-width",
+              "min-height",
+              "margin",
+              "padding",
+            ],
+          },
+          {
+            name: "Kiểu chữ",
+            open: false,
+            buildProps: [
+              "font-family",
+              "font-size",
+              "font-weight",
+              "letter-spacing",
+              "color",
+              "line-height",
+              "text-align",
+              "text-shadow",
+            ],
+          },
+          {
+            name: "Trang trí",
+            open: false,
+            buildProps: [
+              "border-radius-c",
+              "background-color",
+              "border-radius",
+              "border",
+              "box-shadow",
+              "background",
+            ],
+          },
+          {
+            name: "Thêm",
+            open: false,
+            buildProps: ["opacity", "transition", "perspective", "transform"],
+            properties: [
+              {
+                type: "slider",
+                property: "opacity",
+                defaults: 1,
+                step: 0.01,
+                max: 1,
+                min: 0,
+              },
+            ],
+          },
+        ],
       },
       layerManager: {
         appendTo: "#layers-container",
+        open: true,
+      },
+      selectorManager: {
+        appendTo: "#selector-container",
       },
       plugins: [
         basicPlugin,
@@ -196,27 +287,16 @@ export default {
         [grapesjsTabs]: {},
       },
     });
+
     // this.editor.setDragMode("absolute");
 
-    const layerContainer = document.querySelector(".gjs-layers");
-    console.log(layerContainer);
-    // layerContainer.classList.add('open');
-
-    const newElements = document.querySelectorAll(
-      ".gjs-pn-options, .gjs-pn-devices-c"
-    );
-    const parentElement = document.getElementById("nam");
-    newElements.forEach((element) => {
-      parentElement.appendChild(element);
-    });
     const devElement = document.getElementById("dev");
+    console.log(devElement);
     const blockElement = document.querySelectorAll(".gjs-block");
+    console.log(blockElement);
     blockElement.forEach((element) => {
       devElement.appendChild(element);
     });
-    // const styleElement = document.querySelectorAll(".gjs-sm-property");
-    // const devElement2 = document.getElementById("dev2");
-    // styleElement.forEach((element) => {devElement2.appendChild(element);});
 
     const undoBtn = document.getElementById("undo-btn");
     const redoBtn = document.getElementById("redo-btn");
@@ -233,6 +313,7 @@ export default {
     undoBtn.addEventListener("click", () => {
       this.editor.Commands.run("core:undo");
     });
+
     redoBtn.addEventListener("click", () => {
       this.editor.Commands.run("core:redo");
     });
@@ -260,6 +341,7 @@ export default {
         this.editor.Commands.run("core:canvas-clear");
       }
     });
+
     clearBtn.addEventListener("click", () => {
       if (confirm("Bạn có chắc chắn muốn xóa Lading page không?")) {
         this.editor.Commands.run("core:canvas-clear");
@@ -288,220 +370,3 @@ export default {
   },
 };
 </script>
-
-
-<style lang="scss">
-// .gjs-layer-item{
-//   height: 36px;
-//   color: black;
-//   border-bottom: 1px solid #e7dede;
-// }
-
-// .gjs-layer-name{
-//   color: black;
-//   font-weight: 700;
-//   letter-spacing: 0
-// }
-
-// @import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap");
-
-// .gjs-off-prv{
-//   display: none!important;
-// }
-
-// .wp-icon {
-//   display: flex;
-//   width: 100% !important;
-//   align-items: center;
-//   gap: 30px;
-//   border: 1px solid;
-// }
-// .gjs-pn-btn {
-//   margin: 0px;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-// }
-
-// .gjs-pn-btn svg {
-//   color: #523e3e;
-//   width: 18px;
-// }
-
-// #nam {
-//   display: flex;
-//   gap: 50px;
-//   display: none;
-// }
-// .gjs-pn-buttons {
-//   display: flex;
-//   gap: 7px !important;
-// }
-
-// #blocks,
-// #style-manager-container {
-//   // display: none;
-// }
-
-// .gjs-one-bg {
-//   background-color: white !important;
-// }
-
-// #traits-container {
-//   display: none;
-// }
-
-// .wp {
-//   display: flex;
-//   flex-direction: column;
-// }
-
-// .gjs-pn-views-container {
-//   display: none;
-// }
-
-// .gjs-pn-views {
-//   display: none;
-// }
-
-// .gjs-cv-canvas {
-//   width: 100%;
-//   top: 0;
-// }
-
-// .gjs-selected {
-//   outline: 2px solid #f0f4f7 !important;
-//   outline-offset: -2px;
-// }
-
-// .gjs-pn-panel {
-//   position: static;
-// }
-
-// .sp-container {
-//   top: 200px !important;
-// }
-
-// .gjs-pn-panels,
-// .gjs-pn-commands {
-//   display: none !important;
-// }
-
-// .gjs-sm-property {
-//   width: 100%;
-// }
-
-// .gjs-radio-items {
-//   display: grid;
-//   grid-template-columns: 1fr 1fr;
-//   gap: 5px;
-//   background-color: transparent;
-// }
-
-// .gjs-radio-item {
-//   background-color: white;
-//   border: none;
-// }
-// .gjs-fields,
-// .gjs-field {
-//   background-color: white;
-// }
-
-// .gjs-radio-item-label {
-//   border: 1px solid #ebe5e5;
-//   border-radius: 3px;
-//   font-size: 13px;
-//   font-weight: 700;
-//   padding: 9px 0px;
-// }
-
-// .gjs-field {
-//   border: 1px solid #ebe5e5;
-//   padding: 6px 12px;
-//   width: 100%;
-//   border-radius: 4px;
-// }
-
-// .gjs-field.gjs-select,
-// .gjs-field-integer {
-//   padding: 3px 0px;
-// }
-
-// .gjs-field.gjs-field-radio {
-//   border: none;
-//   padding: 0;
-// }
-
-// .gjs-sm-label {
-//   font-size: 13px;
-//   font-weight: 700;
-// }
-
-// .gjs-pn-options,
-// .gjs-pn-devices-c {
-//   position: static;
-// }
-
-// .gjs-input-holder input {
-//   width: 100%;
-// }
-
-// #gjs-sm-input-holder {
-//   height: 100%;
-// }
-// #gjs-sm-input-holder select {
-//   padding: 5px 12px;
-// }
-
-// .gjs-sm-properties {
-//   background-color: #fff;
-//   height: 0;
-//   border: none !important;
-// }
-
-// #dev {
-//   display: grid;
-//   grid-template-columns: 1fr 1fr;
-//   gap: 10px;
-//   .gjs-block {
-//     margin: 0 !important;
-//     width: 100% !important;
-//     min-height: auto;
-//     padding: 15px 0px;
-//     display: flex;
-//     gap: 10px;
-//     &.gjs-one-bg {
-//       background-color: #fff;
-//     }
-//     .gjs-block__media {
-//       margin: 0px auto;
-//       width: 25px;
-//       display: flex;
-//       justify-content: center;
-//       align-items: center;
-//     }
-//     .gjs-block-label {
-//       font-weight: bold;
-//       letter-spacing: 0px;
-//       font-size: 12px;
-//     }
-//   }
-// }
-
-// .btn-toggle-borders svg {
-//   background: red !important;
-//   color: #fff !important;
-// }
-
-// #gjs {
-//   height: 100% !important;
-// }
-
-// .gjs-cv-canvas {
-//   height: 100%;
-// }
-
-// #dev, #dev2{
-//   display: none;
-// }
-</style>

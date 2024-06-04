@@ -88,7 +88,7 @@ export default {
     }
   }
   h5 {
-    font-size: 14.5px;
+    font-size: 14px;
     color: #2a2949;
   }
 }
