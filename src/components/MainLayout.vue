@@ -1,9 +1,15 @@
 <template>
   <div id="wrapper" ref="fullscreenElement">
-    <slot class="header" name="header" :toggleBox="toggleBox" :isBoxHidden="isBoxHidden" :openFullscreen="openFullscreen"/>
+    <slot
+      class="header"
+      name="header"
+      :toggleBox="toggleBox"
+      :isBoxHidden="isBoxHidden"
+      :openFullscreen="openFullscreen"
+    />
     <slot name="sidebarLeft" />
     <button id="reset-btn">
-      <EyeOff class="icon"/>
+      <EyeOff class="icon" />
     </button>
     <slot
       name="content"
@@ -21,7 +27,7 @@
 import { EyeOff } from "lucide-vue";
 
 export default {
-  components: {EyeOff},
+  components: { EyeOff },
   data() {
     return {
       isFloating: false,
@@ -106,46 +112,46 @@ export default {
 
 
 <style lang="scss" scoped>
-#wrapper{
-    #reset-btn{
-      width: 25px;
-      height: 25px;
-      background-color: #0881FC;
-      position: absolute;
-      left: 0;
-      top: 0;
-      z-index: 10000;
-      display: none;
-      border: 0;
-      outline: 0;
-      border-radius: 3px;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
+#wrapper {
+  #reset-btn {
+    width: 25px;
+    height: 25px;
+    background-color: #0881fc;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 10000;
+    display: none;
+    border: 0;
+    outline: 0;
+    border-radius: 3px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
 
-      &:hover{
-        background-color: #080cfc;
-      }
-      
-      &.active{
-        display: flex;
-      }
+    &:hover {
+      background-color: #080cfc;
+    }
 
-      .icon{
-        width: 15px;
-        color: #fff;
-      }
+    &.active {
+      display: flex;
+    }
+
+    .icon {
+      width: 15px;
+      color: #fff;
+    }
   }
 }
 #wp-content {
   display: grid;
   grid-template-columns: auto 240px;
 
-  &.active{
+  &.active {
     grid-template-columns: auto;
-      #content {
-        height: 100vh;
-      }
+    #content {
+      height: 100vh;
+    }
   }
 
   #content {
@@ -159,3 +165,5 @@ export default {
   }
 }
 </style>
+
+

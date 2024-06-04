@@ -1,0 +1,30 @@
+#dev{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+    .gjs-block{
+        width: 100%;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border-radius: 10px;
+        box-shadow: none;
+
+        .gjs-block__media{
+            width: 25px;
+            margin: 0px auto;
+        }
+
+        .gjs-block-label{
+            font-weight: 700;
+            letter-spacing: 0px!important;
+        }
+    }
+}
+
+#blocks{
+    display: none;
+}

@@ -80,6 +80,7 @@ export default {
   padding: 0px 20px;
   justify-content: space-between;
   border-bottom: 1px solid #e9e9e9;
+  
   &.active {
     height: 45px;
     h5 {
@@ -93,10 +94,14 @@ export default {
 }
 
 .sidebar-right-content {
-  height: calc(100% - 40px);
-  padding: 10px;
+  height: calc(100% - 105px);
+  padding: 10px 15px;
   overflow: auto;
+  padding-top: 5px;
   padding-bottom: 50px;
+  &::-webkit-scrollbar {
+    width: 0px;
+}
 }
 
 .icon-action {

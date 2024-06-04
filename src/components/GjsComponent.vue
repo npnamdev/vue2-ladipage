@@ -2,30 +2,85 @@
   <div>
     <MainLayout>
       <template v-slot:header="{ toggleBox, isBoxHidden, openFullscreen }">
-        <HeaderComponent :toggleBox="toggleBox" :isBoxHidden="isBoxHidden" :openFullscreen="openFullscreen" />
+        <HeaderComponent
+          :toggleBox="toggleBox"
+          :isBoxHidden="isBoxHidden"
+          :openFullscreen="openFullscreen"
+        />
       </template>
 
       <template v-slot:sidebarLeft>
         <SidebarLeft />
       </template>
 
-      <template v-slot:content="{ startDrag, isFloating, boxStyle, isBoxHidden, toggleFloating, toggleBox, }">
-        <div id="wp-content" :class="{ 'content-expanded': isBoxHidden || isFloating }">
-          <div id="content" :class="{ 'content-full': isBoxHidden && isFloating }">
+      <template
+        v-slot:content="{
+          startDrag,
+          isFloating,
+          boxStyle,
+          isBoxHidden,
+          toggleFloating,
+          toggleBox,
+        }"
+      >
+        <div
+          id="wp-content"
+          :class="{ 'content-expanded': isBoxHidden || isFloating }"
+        >
+          <div
+            id="content"
+            :class="{ 'content-full': isBoxHidden && isFloating }"
+          >
             <div id="gjs"></div>
           </div>
-          <SidebarRight :startDrag="startDrag" :isFloating="isFloating" :boxStyle="boxStyle" :isBoxHidden="isBoxHidden" :toggleFloating="toggleFloating" :toggleBox="toggleBox">
-            <div class="wp">
-              <div id="dev2"></div>
-              <div id="dev"></div>
+          <SidebarRight
+            :startDrag="startDrag"
+            :isFloating="isFloating"
+            :boxStyle="boxStyle"
+            :isBoxHidden="isBoxHidden"
+            :toggleFloating="toggleFloating"
+            :toggleBox="toggleBox"
+          >
+            <!-- <div class="wp">
+              <div id="layers-container"></div>
+            </div> -->
+
+            <div>
+              <div class="tab-buttons">
+                <button
+                  v-for="tab in tabs"
+                  :key="tab"
+                  @click="selectTab(tab)"
+                  :class="{ active: currentTab === tab }"
+                >
+                  {{ tab }}
+                </button>
+              </div>
+              <div class="tab-content">
+                <div class="item-manage" v-show="currentTab === 'Styles'">
+                  <div id="style-manager-container"></div>
+                </div>
+                <div class="item-manage" v-show="currentTab === 'Properties'">
+                  <div id="traits-container"></div>
+                  <!-- <div id="dev"></div> -->
+                </div>
+                <div class="item-manage" v-show="currentTab === 'Layers'">
+                  <div id="layers-container"></div>
+                </div>
+              </div>
             </div>
           </SidebarRight>
         </div>
       </template>
     </MainLayout>
-    <!-- Ản -->
+
+
+     <div id="dev2"></div>
+    <div id="dev"></div>
+    <div id="style-manager-container"></div> 
+
     <div id="nam"></div>
-    <div id="traits-container"></div>
+    <div id="traits-container"></div> 
     <div id="style-manager-container"></div>
     <div id="blocks"></div>
   </div>
@@ -47,48 +102,26 @@ import HeaderComponent from "./HeaderComponent.vue";
 import SidebarLeft from "./SidebarLeft.vue";
 import SidebarRight from "./SidebarRight.vue";
 
+import "./graperCss/panelManage.scss";
+import "./graperCss/blockManage.scss";
+import "./graperCss/layerManage.scss";
+import "./graperCss/styleManage.scss";
+import "./graperCss/main.scss";
+
 export default {
   name: "GrapesEditor",
-  components: { MainLayout, HeaderComponent, SidebarLeft, SidebarRight},
-  data(){
-    return{
-      editor: ''
-    }
+  data() {
+    return {
+      tabs: ["Styles", "Properties", "Layers"],
+      currentTab: "Styles",
+    };
   },
   methods: {
-    namdev(){
-      this.editor.Commands.run('core:redo');
-    }
-    ,
-    toggle() {
-      this.isVisible = !this.isVisible;
-    },
-    startDrag(event) {
-      this.isDragging = true;
-      this.offsetX = event.clientX - this.x;
-      this.offsetY = event.clientY - this.y;
-      document.addEventListener("mousemove", this.drag);
-      document.addEventListener("mouseup", this.endDrag);
-    },
-    endDrag() {
-      this.isDragging = false;
-      document.removeEventListener("mousemove", this.drag);
-      document.removeEventListener("mouseup", this.endDrag);
-    },
-    drag(event) {
-      if (this.isDragging) {
-        this.x = event.clientX - this.offsetX;
-        this.y = event.clientY - this.offsetY;
-      }
-    },
-    handleClickOutside(event) {
-      const dropdown = this.$refs.dropdown;
-      if (dropdown && !dropdown.contains(event.target)) {
-        this.isVisible = false;
-      }
+    selectTab(tab) {
+      this.currentTab = tab;
     },
   },
-  beforeDestroy() { document.removeEventListener("mousedown", this.handleClickOutside);},
+  components: { MainLayout, HeaderComponent, SidebarLeft, SidebarRight },
   mounted() {
     document.addEventListener("mousedown", this.handleClickOutside);
     this.editor = grapesjs.init({
@@ -98,8 +131,8 @@ export default {
       canvasCss: `
         body { background-color: #fff }
         ::-webkit-scrollbar-track { background: #f1f1f1;}
-        * ::-webkit-scrollbar-thumb { background: #D8CBCB; border-radius: 10px }
-        * ::-webkit-scrollbar { width: 5px }
+        * ::-webkit-scrollbar-thumb { background: #D8CBCB; border-radius: 10px;}
+        * ::-webkit-scrollbar { width: 0px!important; }
       `,
       storageManager: {
         type: "local",
@@ -113,7 +146,9 @@ export default {
       },
       styleManager: {
         appendTo: "#style-manager-container",
-        // clearProperties: true,
+      },
+      layerManager: {
+        appendTo: "#layers-container",
       },
       plugins: [
         basicPlugin,
@@ -163,16 +198,25 @@ export default {
     });
     // this.editor.setDragMode("absolute");
 
-    const newElements = document.querySelectorAll(".gjs-pn-options, .gjs-pn-devices-c");
+    const layerContainer = document.querySelector(".gjs-layers");
+    console.log(layerContainer);
+    // layerContainer.classList.add('open');
+
+    const newElements = document.querySelectorAll(
+      ".gjs-pn-options, .gjs-pn-devices-c"
+    );
     const parentElement = document.getElementById("nam");
-    newElements.forEach((element) => { parentElement.appendChild(element);});
+    newElements.forEach((element) => {
+      parentElement.appendChild(element);
+    });
     const devElement = document.getElementById("dev");
     const blockElement = document.querySelectorAll(".gjs-block");
-    blockElement.forEach((element) => {devElement.appendChild(element);});
-    const styleElement = document.querySelectorAll(".gjs-sm-property");
-    const devElement2 = document.getElementById("dev2");
-    styleElement.forEach((element) => {devElement2.appendChild(element);});
-
+    blockElement.forEach((element) => {
+      devElement.appendChild(element);
+    });
+    // const styleElement = document.querySelectorAll(".gjs-sm-property");
+    // const devElement2 = document.getElementById("dev2");
+    // styleElement.forEach((element) => {devElement2.appendChild(element);});
 
     const undoBtn = document.getElementById("undo-btn");
     const redoBtn = document.getElementById("redo-btn");
@@ -186,11 +230,15 @@ export default {
     const layoutSidebarRight = document.getElementById("sidebar-right");
     const layoutSidebarLeft = document.getElementById("sidebar-left");
 
-    undoBtn.addEventListener("click", ()=> { this.editor.Commands.run('core:undo')});
-    redoBtn.addEventListener("click", ()=> { this.editor.Commands.run('core:redo')});
+    undoBtn.addEventListener("click", () => {
+      this.editor.Commands.run("core:undo");
+    });
+    redoBtn.addEventListener("click", () => {
+      this.editor.Commands.run("core:redo");
+    });
 
-    previewBtn.addEventListener("click", ()=> { 
-      this.editor.Commands.run('core:preview');
+    previewBtn.addEventListener("click", () => {
+      this.editor.Commands.run("core:preview");
       layoutWpContent.classList.add("active");
       layoutHeader.classList.add("active");
       layoutSidebarRight.classList.add("active");
@@ -198,8 +246,8 @@ export default {
       resetBtn.classList.add("active");
     });
 
-    resetBtn.addEventListener("click", ()=> { 
-      this.editor.Commands.stop('core:preview');
+    resetBtn.addEventListener("click", () => {
+      this.editor.Commands.stop("core:preview");
       layoutWpContent.classList.remove("active");
       layoutHeader.classList.remove("active");
       layoutSidebarRight.classList.remove("active");
@@ -209,231 +257,251 @@ export default {
 
     clearBtn.addEventListener("click", () => {
       if (confirm("Bạn có chắc chắn muốn xóa Lading page không?")) {
-        this.editor.Commands.run('core:canvas-clear');
+        this.editor.Commands.run("core:canvas-clear");
       }
     });
     clearBtn.addEventListener("click", () => {
       if (confirm("Bạn có chắc chắn muốn xóa Lading page không?")) {
-        this.editor.Commands.run('core:canvas-clear');
+        this.editor.Commands.run("core:canvas-clear");
       }
     });
 
-    this.editor.Commands.run('core:component-outline');
+    this.editor.Commands.run("core:component-outline");
     let isOutlineActive = true;
-    outlineBtn.addEventListener("click", ()=> { 
+    outlineBtn.addEventListener("click", () => {
       if (isOutlineActive) {
-        this.editor.Commands.stop('core:component-outline');
-        outlineBtn.classList.remove('active');
+        this.editor.Commands.stop("core:component-outline");
+        outlineBtn.classList.remove("active");
       } else {
-        this.editor.Commands.run('core:component-outline');
-        outlineBtn.classList.add('active');
+        this.editor.Commands.run("core:component-outline");
+        outlineBtn.classList.add("active");
       }
       isOutlineActive = !isOutlineActive;
     });
 
-    codeBtn.addEventListener("click", ()=> { this.editor.Commands.run('core:open-code')});
+    codeBtn.addEventListener("click", () => {
+      this.editor.Commands.run("core:open-code");
+    });
   },
-  destroyed() { this.editor.destroy();},
+  destroyed() {
+    this.editor.destroy();
+  },
 };
 </script>
 
 
 <style lang="scss">
-@import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap");
+// .gjs-layer-item{
+//   height: 36px;
+//   color: black;
+//   border-bottom: 1px solid #e7dede;
+// }
 
-.gjs-off-prv{
-  display: none!important;
-}
+// .gjs-layer-name{
+//   color: black;
+//   font-weight: 700;
+//   letter-spacing: 0
+// }
 
-.wp-icon {
-  display: flex;
-  width: 100% !important;
-  align-items: center;
-  gap: 30px;
-  border: 1px solid;
-}
-.gjs-pn-btn {
-  margin: 0px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+// @import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap");
 
-.gjs-pn-btn svg {
-  color: #523e3e;
-  width: 18px;
-}
+// .gjs-off-prv{
+//   display: none!important;
+// }
 
-#nam {
-  display: flex;
-  gap: 50px;
-  display: none;
-}
-.gjs-pn-buttons {
-  display: flex;
-  gap: 7px !important;
-}
+// .wp-icon {
+//   display: flex;
+//   width: 100% !important;
+//   align-items: center;
+//   gap: 30px;
+//   border: 1px solid;
+// }
+// .gjs-pn-btn {
+//   margin: 0px;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
 
-#blocks,
-#style-manager-container {
-  display: none;
-}
+// .gjs-pn-btn svg {
+//   color: #523e3e;
+//   width: 18px;
+// }
 
-.gjs-one-bg {
-  background-color: white !important;
-}
+// #nam {
+//   display: flex;
+//   gap: 50px;
+//   display: none;
+// }
+// .gjs-pn-buttons {
+//   display: flex;
+//   gap: 7px !important;
+// }
 
-#traits-container {
-  display: none;
-}
+// #blocks,
+// #style-manager-container {
+//   // display: none;
+// }
 
-.wp {
-  display: flex;
-  flex-direction: column;
-}
+// .gjs-one-bg {
+//   background-color: white !important;
+// }
 
-.gjs-pn-views-container {
-  display: none;
-}
+// #traits-container {
+//   display: none;
+// }
 
-.gjs-pn-views {
-  display: none;
-}
+// .wp {
+//   display: flex;
+//   flex-direction: column;
+// }
 
-.gjs-cv-canvas {
-  width: 100%;
-  top: 0;
-}
+// .gjs-pn-views-container {
+//   display: none;
+// }
 
-.gjs-selected {
-  outline: 2px solid #f0f4f7 !important;
-  outline-offset: -2px;
-}
+// .gjs-pn-views {
+//   display: none;
+// }
 
-.gjs-pn-panel {
-  position: static;
-}
+// .gjs-cv-canvas {
+//   width: 100%;
+//   top: 0;
+// }
 
-.sp-container {
-  top: 200px !important;
-}
+// .gjs-selected {
+//   outline: 2px solid #f0f4f7 !important;
+//   outline-offset: -2px;
+// }
 
-.gjs-pn-panels,
-.gjs-pn-commands {
-  display: none !important;
-}
+// .gjs-pn-panel {
+//   position: static;
+// }
 
-.gjs-sm-property {
-  width: 100%;
-}
+// .sp-container {
+//   top: 200px !important;
+// }
 
-.gjs-radio-items {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5px;
-  background-color: transparent;
-}
+// .gjs-pn-panels,
+// .gjs-pn-commands {
+//   display: none !important;
+// }
 
-.gjs-radio-item {
-  background-color: white;
-  border: none;
-}
-.gjs-fields,
-.gjs-field {
-  background-color: white;
-}
+// .gjs-sm-property {
+//   width: 100%;
+// }
 
-.gjs-radio-item-label {
-  border: 1px solid #ebe5e5;
-  border-radius: 3px;
-  font-size: 13px;
-  font-weight: 700;
-  padding: 9px 0px;
-}
+// .gjs-radio-items {
+//   display: grid;
+//   grid-template-columns: 1fr 1fr;
+//   gap: 5px;
+//   background-color: transparent;
+// }
 
-.gjs-field {
-  border: 1px solid #ebe5e5;
-  padding: 6px 12px;
-  width: 100%;
-  border-radius: 4px;
-}
+// .gjs-radio-item {
+//   background-color: white;
+//   border: none;
+// }
+// .gjs-fields,
+// .gjs-field {
+//   background-color: white;
+// }
 
-.gjs-field.gjs-select,
-.gjs-field-integer {
-  padding: 3px 0px;
-}
+// .gjs-radio-item-label {
+//   border: 1px solid #ebe5e5;
+//   border-radius: 3px;
+//   font-size: 13px;
+//   font-weight: 700;
+//   padding: 9px 0px;
+// }
 
-.gjs-field.gjs-field-radio {
-  border: none;
-  padding: 0;
-}
+// .gjs-field {
+//   border: 1px solid #ebe5e5;
+//   padding: 6px 12px;
+//   width: 100%;
+//   border-radius: 4px;
+// }
 
-.gjs-sm-label {
-  font-size: 13px;
-  font-weight: 700;
-}
+// .gjs-field.gjs-select,
+// .gjs-field-integer {
+//   padding: 3px 0px;
+// }
 
-.gjs-pn-options,
-.gjs-pn-devices-c {
-  position: static;
-}
+// .gjs-field.gjs-field-radio {
+//   border: none;
+//   padding: 0;
+// }
 
-.gjs-input-holder input {
-  width: 100%;
-}
+// .gjs-sm-label {
+//   font-size: 13px;
+//   font-weight: 700;
+// }
 
-#gjs-sm-input-holder {
-  height: 100%;
-}
-#gjs-sm-input-holder select {
-  padding: 5px 12px;
-}
+// .gjs-pn-options,
+// .gjs-pn-devices-c {
+//   position: static;
+// }
 
-.gjs-sm-properties {
-  background-color: #fff;
-  height: 0;
-  border: none !important;
-}
+// .gjs-input-holder input {
+//   width: 100%;
+// }
 
-#dev {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  .gjs-block {
-    margin: 0 !important;
-    width: 100% !important;
-    min-height: auto;
-    padding: 15px 0px;
-    display: flex;
-    gap: 10px;
-    &.gjs-one-bg {
-      background-color: #fff;
-    }
-    .gjs-block__media {
-      margin: 0px auto;
-      width: 25px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .gjs-block-label {
-      font-weight: bold;
-      letter-spacing: 0px;
-      font-size: 12px;
-    }
-  }
-}
+// #gjs-sm-input-holder {
+//   height: 100%;
+// }
+// #gjs-sm-input-holder select {
+//   padding: 5px 12px;
+// }
 
-.btn-toggle-borders svg {
-  background: red !important;
-  color: #fff !important;
-}
+// .gjs-sm-properties {
+//   background-color: #fff;
+//   height: 0;
+//   border: none !important;
+// }
 
-#gjs {
-  height: 100% !important;
-}
+// #dev {
+//   display: grid;
+//   grid-template-columns: 1fr 1fr;
+//   gap: 10px;
+//   .gjs-block {
+//     margin: 0 !important;
+//     width: 100% !important;
+//     min-height: auto;
+//     padding: 15px 0px;
+//     display: flex;
+//     gap: 10px;
+//     &.gjs-one-bg {
+//       background-color: #fff;
+//     }
+//     .gjs-block__media {
+//       margin: 0px auto;
+//       width: 25px;
+//       display: flex;
+//       justify-content: center;
+//       align-items: center;
+//     }
+//     .gjs-block-label {
+//       font-weight: bold;
+//       letter-spacing: 0px;
+//       font-size: 12px;
+//     }
+//   }
+// }
 
-.gjs-cv-canvas {
-  height: 100%;
-}
+// .btn-toggle-borders svg {
+//   background: red !important;
+//   color: #fff !important;
+// }
+
+// #gjs {
+//   height: 100% !important;
+// }
+
+// .gjs-cv-canvas {
+//   height: 100%;
+// }
+
+// #dev, #dev2{
+//   display: none;
+// }
 </style>

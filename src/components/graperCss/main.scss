@@ -1,0 +1,94 @@
+.gjs-one-bg {
+    background-color: #fff !important;
+}
+
+.gjs-pn-panels,
+.gjs-pn-options,
+.gjs-pn-devices-c {
+    display: none;
+}
+
+.gjs-cv-canvas {
+    width: 100%;
+    top: 0;
+}
+
+
+// 
+
+.tab-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+button {
+    border: none;
+    outline: none;
+    padding: 7px 0px;
+    padding-bottom: 13px;
+    cursor: pointer;
+    background-color: transparent;
+    font-weight: 700;
+    border-bottom: 1px solid #e0d4d4;
+    font-size: 12px;
+}
+
+button.active {
+    color: blue;
+    border-bottom: 1px solid blue;
+}
+
+.tab-content {
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+}
+
+.tab-content .item-manage {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+}
+
+
+#traits-container {
+    .gjs-trt-trait {
+        display: flex;
+        flex-direction: column;
+        margin-top: 5px;
+
+        .gjs-label-wrp {
+            width: 100%;
+
+            .gjs-label {
+                font-size: 12px;
+                font-weight: 700;
+                margin-top: 5px;
+                margin-bottom: 2px;
+                margin-left: 1px;
+            }
+        }
+ 
+        .gjs-field-wrp {
+            width: 100%;
+        }
+
+        .gjs-field-checkbox {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .gjs-field-checkbox {
+            color: #000;
+        }
+    }
+
+    select, input{
+        margin-left: 7px!important;
+        font-size: 12px;
+        font-weight: 500;
+    }
+}
