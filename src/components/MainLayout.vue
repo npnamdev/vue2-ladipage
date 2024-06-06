@@ -75,6 +75,7 @@ export default {
       if (this.isFloating) {
         this.position.top = this.initialPosition.top;
         this.position.right = this.initialPosition.right;
+        this.position.right = this.initialPosition.right;
       } else {
         this.initialPosition.top = 0;
         this.initialPosition.right = 0;

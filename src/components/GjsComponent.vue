@@ -346,9 +346,37 @@ export default {
       },
     });
 
+
+    this.editor.Blocks.add('button', {
+        category: '',
+        label: 'Button',
+        media: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pin"><line x1="12" x2="12" y1="17" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>',
+        content: {
+            type: 'button',
+            content: '<span>Button 2</span>',
+            attributes: { type: 'button', class: 'btn btn-primary' }
+        },
+    });
+
+    // const demo = this.editor.StyleManager.getSector("general").set({
+    //   name: "Nam",
+    // });
+    // console.log(demo);
+    // this.editor.StyleManager.getProperty("general", "display").set({
+    //   name: "Kiểu",
+    // });
+
     // ==============================================================
     const selectedWp = document.querySelector(".title-secleced");
     this.editor.on("component:selected", (component) => {
+      const HtmlSelected = this.editor.getHtml();
+      const CssSelected = this.editor.getCss();
+      console.log(HtmlSelected);
+      console.log(CssSelected);
+
+      if (this.currentTab == "Blocks") {
+        this.currentTab = "Styles";
+      }
       this.component = component;
       selectedWp.classList.add("active");
       component.on("change:custom-name", () => {
