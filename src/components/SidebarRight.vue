@@ -19,7 +19,11 @@
 
     <div class="sidebar-right-head" :class="isFloating && 'active'">
       <span></span>
-      <h5>Thiết lập toàn trang</h5>
+      <div class="title-secleced">
+        <div id="selected">Thiết lập toàn trang</div>
+        <PencilLine class="icon" />
+      </div>
+
       <span v-if="isFloating"></span>
       <Shrink
         v-if="!isFloating"
@@ -29,14 +33,14 @@
       />
     </div>
     <div class="sidebar-right-content">
-     <slot ></slot>
+      <slot></slot>
     </div>
   </div>
 </template>
 
 
 <script>
-import { Shrink, X, GripHorizontal, Expand } from "lucide-vue";
+import { Shrink, X, GripHorizontal, Expand, PencilLine } from "lucide-vue";
 export default {
   props: [
     "startDrag",
@@ -46,7 +50,7 @@ export default {
     "toggleFloating",
     "toggleBox",
   ],
-  components: { Shrink, X, GripHorizontal, Expand },
+  components: { Shrink, X, GripHorizontal, Expand, PencilLine },
 };
 </script>
 
@@ -58,17 +62,16 @@ export default {
   cursor: pointer;
   overflow: hidden;
 
-  &.active{
+  &.active {
     display: none;
   }
-
 
   &.floating {
     border-radius: 5px;
     box-shadow: 0 -1px 38px rgba(0, 0, 0, 0.05), 0 4px 7px rgba(0, 0, 0, 0.12);
   }
 
-  &.hiddenBox{
+  &.hiddenBox {
     max-width: 0px;
   }
 }
@@ -80,7 +83,7 @@ export default {
   padding: 0px 20px;
   justify-content: space-between;
   border-bottom: 1px solid #e9e9e9;
-  
+
   &.active {
     height: 45px;
     h5 {
@@ -90,6 +93,31 @@ export default {
   h5 {
     font-size: 14px;
     color: #2a2949;
+  }
+
+  .title-secleced {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    &.active {
+      .icon {
+        display: block;
+      }
+    }
+
+    .icon {
+      display: none;
+      color: rgb(66, 62, 62);
+      font-size: 15px;
+    }
+
+    #selected {
+      text-transform: uppercase;
+      font-size: 12.5px;
+      font-weight: 700;
+    }
   }
 }
 
@@ -101,7 +129,7 @@ export default {
   padding-bottom: 50px;
   &::-webkit-scrollbar {
     width: 0px;
-}
+  }
 }
 
 .icon-action {
@@ -140,3 +168,4 @@ export default {
   }
 }
 </style>
+

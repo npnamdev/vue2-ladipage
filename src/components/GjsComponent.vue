@@ -55,6 +55,7 @@
               </div>
               <div class="tab-content">
                 <div class="item-manage" v-show="currentTab === 'Styles'">
+                  <button @click="updateTagName">update tagname</button>
                   <div id="selector-container"></div>
                   <div id="style-manager-container"></div>
                 </div>
@@ -82,7 +83,6 @@
 <script>
 import grapesjs from "grapesjs";
 import "grapesjs/dist/css/grapes.min.css";
-import "grapesjs/dist/grapes.min.js";
 import presetWebpage from "grapesjs-preset-webpage";
 import formPlugin from "grapesjs-plugin-forms";
 import basicPlugin from "grapesjs-blocks-basic";
@@ -93,7 +93,7 @@ import MainLayout from "./MainLayout.vue";
 import HeaderComponent from "./HeaderComponent.vue";
 import SidebarLeft from "./SidebarLeft.vue";
 import SidebarRight from "./SidebarRight.vue";
-import { PencilRuler, Settings, Layers, LayoutGrid} from "lucide-vue";
+import { PencilRuler, Settings, Layers, LayoutGrid } from "lucide-vue";
 import "./graperCss/panelManage.scss";
 import "./graperCss/blockManage.scss";
 import "./graperCss/layerManage.scss";
@@ -133,6 +133,16 @@ export default {
     selectTab(tab) {
       this.currentTab = tab;
     },
+    updateTagName() {
+      this.editor.getSelected().set("tagName", "abc");
+      console.log("demoi");
+      // this.editor.on("component:attributes:tagName")
+      // console.log("namdev");
+      // this.editor.on("component:attributes:tagName", (props ) => {
+      //   console.log(props );
+      // component.set('tagName', 'namDev')
+      // });
+    },
   },
   components: {
     MainLayout,
@@ -151,7 +161,7 @@ export default {
         body { background-color: #fff }
         ::-webkit-scrollbar-track { background: #f1f1f1;}
         * ::-webkit-scrollbar-thumb { background: #D8CBCB; border-radius: 10px;}
-        * ::-webkit-scrollbar { width: 0px!important; }
+        * ::-webkit-scrollbar { width: 0px!important; height: 0px}
       `,
       storageManager: {
         type: "local",
@@ -240,6 +250,7 @@ export default {
       },
       selectorManager: {
         appendTo: "#selector-container",
+        custom: true,
       },
       plugins: [
         basicPlugin,
@@ -287,16 +298,72 @@ export default {
         [grapesjsTabs]: {},
       },
     });
+    this.editor.on("change:tagName", (component) => {
+      console.log(component);
+    });
+    const selectedWp = document.querySelector(".title-secleced");
+    const selected = document.querySelector("#selected");
+
+    this.editor.on("component:selected", (component) => {
+      selectedWp.classList.add("active");
+      selected.innerHTML = component.get("type")
+        ? component.get("type")
+        : component.get("tagName");
+    });
+
+    // this.editor.on("selector:custom", (component ) => {
+    //   // component.set('tagName', 'Nguyễn Phương Nam');
+    //   console.log("abc", component );
+    // });
+
+    // this.editor.on("layer:selected:component", (component) => {
+    //   // Update the specific layer of your UI
+    //   console.log(component);
+
+    // });
 
     // this.editor.setDragMode("absolute");
 
+    // const showTagNameSelect = document.querySelector('.showTagNameSelect')
+    //     this.editor.on("selector:custom", (props) => {
+    //       // props.container (HTMLElement) - The default element where you can append your UI
+    //       // Here you would put the logic to render/update your UI.
+    //       console.log(props.container);
+
+    //       showTagNameSelect.
+
+    //     });
+
+    // this.editor.on('layer:custom', (props) => {
+    //     // props.container (HTMLElement) - The default element where you can append your UI
+    //     console.log("layer", props);
+    // });
+
+    // // Triggered when the root layer is changed.
+    // this.editor.on('layer:root', (root) => {
+    //         console.log("layer", root);
+    // });
+
+    // Triggered when a component is updated, this allows you to update specific layers.
+    // this.editor.on('layer:component', (component) => {
+    //       console.log("layer", component);
+    // });
+
+    // const selected = document.querySelector(".gjs-clm-sel-cmp")
+    // console.log("selected", selected)
+
     const devElement = document.getElementById("dev");
-    console.log(devElement);
     const blockElement = document.querySelectorAll(".gjs-block");
-    console.log(blockElement);
     blockElement.forEach((element) => {
       devElement.appendChild(element);
     });
+
+    // const devElement2 = document.getElementById("devElement2");
+    // const demo = document.querySelector(
+    //   "#selector-container .gjs-clm-sels-info"
+    // );
+    // devElement2.appendChild(demo);
+    // console.log(demo);
 
     const undoBtn = document.getElementById("undo-btn");
     const redoBtn = document.getElementById("redo-btn");
