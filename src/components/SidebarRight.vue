@@ -19,10 +19,8 @@
 
     <div class="sidebar-right-head" :class="isFloating && 'active'">
       <span></span>
-      <div class="title-secleced">
-        <div id="selected">Thiết lập toàn trang</div>
-        <PencilLine class="icon" />
-      </div>
+
+      <slot name="sidebar-right-title"></slot>
 
       <span v-if="isFloating"></span>
       <Shrink
@@ -40,7 +38,7 @@
 
 
 <script>
-import { Shrink, X, GripHorizontal, Expand, PencilLine } from "lucide-vue";
+import { Shrink, X, GripHorizontal, Expand} from "lucide-vue";
 export default {
   props: [
     "startDrag",
@@ -50,7 +48,7 @@ export default {
     "toggleFloating",
     "toggleBox",
   ],
-  components: { Shrink, X, GripHorizontal, Expand, PencilLine },
+  components: { Shrink, X, GripHorizontal, Expand},
 };
 </script>
 
@@ -61,7 +59,7 @@ export default {
   z-index: 50;
   cursor: pointer;
   overflow: hidden;
-
+  position: relative;
   &.active {
     display: none;
   }
@@ -77,23 +75,12 @@ export default {
 }
 
 .sidebar-right-head {
-  height: 55px;
+  height: 50px;
   display: flex;
   align-items: center;
   padding: 0px 20px;
   justify-content: space-between;
   border-bottom: 1px solid #e9e9e9;
-
-  &.active {
-    height: 45px;
-    h5 {
-      margin-top: -5px;
-    }
-  }
-  h5 {
-    font-size: 14px;
-    color: #2a2949;
-  }
 
   .title-secleced {
     display: flex;
@@ -115,18 +102,19 @@ export default {
 
     #selected {
       text-transform: uppercase;
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 700;
     }
   }
 }
 
 .sidebar-right-content {
-  height: calc(100% - 105px);
+  height: calc(100% - 100px);
   padding: 10px 15px;
   overflow: auto;
-  padding-top: 5px;
+  padding-top: 0px;
   padding-bottom: 50px;
+  background: #fff;
   &::-webkit-scrollbar {
     width: 0px;
   }
@@ -168,4 +156,3 @@ export default {
   }
 }
 </style>
-

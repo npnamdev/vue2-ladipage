@@ -41,33 +41,47 @@
             :toggleFloating="toggleFloating"
             :toggleBox="toggleBox"
           >
-            <div>
-              <div class="tab-buttons">
-                <button
-                  v-for="tab in tabs"
-                  :key="tab"
-                  @click="selectTab(tab.type)"
-                  :class="{ active: currentTab === tab.type }"
-                >
-                  <icon :is="tab.icon" class="icon" stroke-width="1.5" />
-                  <span>{{ tab.title }}</span>
-                </button>
+            <template v-slot:sidebar-right-title>
+              <div class="title-secleced" v-show="!isEditComponentName">
+                <div id="selected">Thiết lập trang</div>
+                <PencilLine @click="handleOpenInput" class="icon" />
               </div>
-              <div class="tab-content">
-                <div class="item-manage" v-show="currentTab === 'Styles'">
-                  <button @click="updateTagName">update tagname</button>
-                  <div id="selector-container"></div>
-                  <div id="style-manager-container"></div>
-                </div>
-                <div class="item-manage" v-show="currentTab === 'Properties'">
-                  <div id="traits-container"></div>
-                </div>
-                <div class="item-manage" v-show="currentTab === 'Layers'">
-                  <div id="layers-container"></div>
-                </div>
-                <div class="item-manage" v-show="currentTab === 'Blocks'">
-                  <div id="dev"></div>
-                </div>
+              <div class="title-secleced-change" v-show="isEditComponentName">
+                <input
+                  type="text"
+                  ref="myInput"
+                  v-model="componentName"
+                  class="input-edit-component-name"
+                  @keyup.enter="updateTagName"
+                />
+                <Save @click="updateTagName" class="icon" />
+              </div>
+            </template>
+
+            <div class="tab-buttons">
+              <button
+                v-for="tab in tabs"
+                :key="tab"
+                @click="selectTab(tab.type)"
+                :class="{ active: currentTab === tab.type }"
+              >
+                <icon :is="tab.icon" class="icon" stroke-width="1.5" />
+                <span>{{ tab.title }}</span>
+              </button>
+            </div>
+            <div class="tab-content">
+              <div class="item-manage" v-show="currentTab === 'Styles'">
+                <div id="selector-container"></div>
+                <div id="style-manager-container"></div>
+              </div>
+              <div class="item-manage" v-show="currentTab === 'Properties'">
+                <div id="traits-container"></div>
+              </div>
+              <div class="item-manage" v-show="currentTab === 'Layers'">
+                <div id="layers-container"></div>
+              </div>
+              <div class="item-manage" v-show="currentTab === 'Blocks'">
+                <div id="dev"></div>
               </div>
             </div>
           </SidebarRight>
@@ -93,7 +107,14 @@ import MainLayout from "./MainLayout.vue";
 import HeaderComponent from "./HeaderComponent.vue";
 import SidebarLeft from "./SidebarLeft.vue";
 import SidebarRight from "./SidebarRight.vue";
-import { PencilRuler, Settings, Layers, LayoutGrid } from "lucide-vue";
+import {
+  PencilRuler,
+  Settings,
+  Layers,
+  LayoutGrid,
+  PencilLine,
+  Save,
+} from "lucide-vue";
 import "./graperCss/panelManage.scss";
 import "./graperCss/blockManage.scss";
 import "./graperCss/layerManage.scss";
@@ -126,6 +147,10 @@ export default {
           icon: LayoutGrid,
         },
       ],
+      editor: "",
+      component: "",
+      componentName: "",
+      isEditComponentName: false,
       currentTab: "Styles",
     };
   },
@@ -133,15 +158,34 @@ export default {
     selectTab(tab) {
       this.currentTab = tab;
     },
+    updateSelectedComponentName(component) {
+      const selected = document.querySelector("#selected");
+      if (component.get("custom-name")) {
+        selected.innerHTML = `${component.get("custom-name")} (#${
+          component.ccid
+        })`;
+      } else if (component.get("name")) {
+        selected.innerHTML = `${component.get("name")} (#${component.ccid})`;
+      } else if (component.get("type")) {
+        selected.innerHTML = `${component.get("type")} (#${component.ccid})`;
+      } else {
+        selected.innerHTML = `${component.get("tagName")} (#${component.ccid})`;
+      }
+    },
     updateTagName() {
-      this.editor.getSelected().set("tagName", "abc");
-      console.log("demoi");
-      // this.editor.on("component:attributes:tagName")
-      // console.log("namdev");
-      // this.editor.on("component:attributes:tagName", (props ) => {
-      //   console.log(props );
-      // component.set('tagName', 'namDev')
-      // });
+      this.component.set("custom-name", this.componentName);
+      this.isEditComponentName = false;
+    },
+    handleOpenInput() {
+      this.componentName =
+        this.component.get("custom-name") ||
+        this.component.get("name") ||
+        this.component.get("type") ||
+        this.component.get("tagName");
+      this.isEditComponentName = true;
+      this.$nextTick(() => {
+        this.$refs.myInput.select();
+      });
     },
   },
   components: {
@@ -150,6 +194,8 @@ export default {
     SidebarLeft,
     SidebarRight,
     PencilRuler,
+    PencilLine,
+    Save,
   },
   mounted() {
     document.addEventListener("mousedown", this.handleClickOutside);
@@ -247,6 +293,7 @@ export default {
       layerManager: {
         appendTo: "#layers-container",
         open: true,
+        showWrapper: false,
       },
       selectorManager: {
         appendTo: "#selector-container",
@@ -298,72 +345,24 @@ export default {
         [grapesjsTabs]: {},
       },
     });
-    this.editor.on("change:tagName", (component) => {
-      console.log(component);
-    });
+
+    // ==============================================================
     const selectedWp = document.querySelector(".title-secleced");
-    const selected = document.querySelector("#selected");
-
     this.editor.on("component:selected", (component) => {
+      this.component = component;
       selectedWp.classList.add("active");
-      selected.innerHTML = component.get("type")
-        ? component.get("type")
-        : component.get("tagName");
+      component.on("change:custom-name", () => {
+        this.updateSelectedComponentName(component);
+      });
+      this.updateSelectedComponentName(component);
     });
 
-    // this.editor.on("selector:custom", (component ) => {
-    //   // component.set('tagName', 'Nguyễn Phương Nam');
-    //   console.log("abc", component );
-    // });
-
-    // this.editor.on("layer:selected:component", (component) => {
-    //   // Update the specific layer of your UI
-    //   console.log(component);
-
-    // });
-
-    // this.editor.setDragMode("absolute");
-
-    // const showTagNameSelect = document.querySelector('.showTagNameSelect')
-    //     this.editor.on("selector:custom", (props) => {
-    //       // props.container (HTMLElement) - The default element where you can append your UI
-    //       // Here you would put the logic to render/update your UI.
-    //       console.log(props.container);
-
-    //       showTagNameSelect.
-
-    //     });
-
-    // this.editor.on('layer:custom', (props) => {
-    //     // props.container (HTMLElement) - The default element where you can append your UI
-    //     console.log("layer", props);
-    // });
-
-    // // Triggered when the root layer is changed.
-    // this.editor.on('layer:root', (root) => {
-    //         console.log("layer", root);
-    // });
-
-    // Triggered when a component is updated, this allows you to update specific layers.
-    // this.editor.on('layer:component', (component) => {
-    //       console.log("layer", component);
-    // });
-
-    // const selected = document.querySelector(".gjs-clm-sel-cmp")
-    // console.log("selected", selected)
-
+    // ==============================================================
     const devElement = document.getElementById("dev");
     const blockElement = document.querySelectorAll(".gjs-block");
     blockElement.forEach((element) => {
       devElement.appendChild(element);
     });
-
-    // const devElement2 = document.getElementById("devElement2");
-    // const demo = document.querySelector(
-    //   "#selector-container .gjs-clm-sels-info"
-    // );
-    // devElement2.appendChild(demo);
-    // console.log(demo);
 
     const undoBtn = document.getElementById("undo-btn");
     const redoBtn = document.getElementById("redo-btn");
@@ -380,7 +379,6 @@ export default {
     undoBtn.addEventListener("click", () => {
       this.editor.Commands.run("core:undo");
     });
-
     redoBtn.addEventListener("click", () => {
       this.editor.Commands.run("core:redo");
     });
@@ -409,13 +407,8 @@ export default {
       }
     });
 
-    clearBtn.addEventListener("click", () => {
-      if (confirm("Bạn có chắc chắn muốn xóa Lading page không?")) {
-        this.editor.Commands.run("core:canvas-clear");
-      }
-    });
-
     this.editor.Commands.run("core:component-outline");
+    outlineBtn.classList.add("active");
     let isOutlineActive = true;
     outlineBtn.addEventListener("click", () => {
       if (isOutlineActive) {
@@ -436,4 +429,7 @@ export default {
     this.editor.destroy();
   },
 };
-</script>
+</script>  
+
+
+
