@@ -1,0 +1,152 @@
+#traits-container {
+    margin-top: 5px;
+
+    .gjs-trt-trait__wrp {
+        margin-top: 2px;
+    }
+
+    .gjs-field {
+        height: auto;
+    }
+
+
+    .gjs-field-select {
+        div {
+            width: 100%;
+
+            select {
+                margin: 0;
+                padding: 0;
+            }
+
+            option {
+                margin: 0;
+                padding: 0;
+            }
+        }
+    }
+
+    .gjs-chk-icon {
+        border-color: #171124;
+    }
+
+    .gjs-trt-trait {
+        display: flex;
+        flex-direction: column;
+        margin-top: 5px;
+
+        .gjs-label-wrp {
+            width: 100%;
+
+            .gjs-label {
+                font-size: 12px;
+                font-weight: 700;
+                margin-top: 5px;
+                margin-bottom: 2px;
+                margin-left: 1px;
+            }
+        }
+
+        .gjs-field-wrp {
+            width: 100% !important;
+        }
+
+        .gjs-field-checkbox {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+
+        .gjs-field-wrp--checkbox {
+            width: 30px !important;
+            height: 30px !important;
+
+            .gjs-field-checkbox {
+                height: 100% !important;
+            }
+        }
+
+        .gjs-trt-trait--checkbox {
+            border: 1px solid yellow;
+        }
+
+        .gjs-field-checkbox {
+            color: #000;
+        }
+    }
+
+    select,
+    input {
+        padding: 9px 12px !important;
+        color: black !important;
+        font-size: 12px;
+        font-weight: 500;
+
+        &::placeholder {
+            color: #a7a0a0 !important;
+            font-weight: 500;
+        }
+    }
+
+    .gjs-field-select {
+        option {
+            background-color: rgb(233, 233, 241);
+            color: black !important;
+            font-weight: 600;
+            padding: 20px;
+        }
+    }
+
+
+    button {
+        padding: 10px 12px !important;
+        background-color: blue;
+        color: #fff;
+        border-radius: 5px;
+
+        &:hover {
+            background-color: #3131f7;
+        }
+    }
+
+    .gjs-trt-trait {
+        padding: 0;
+    }
+
+    .gjs-trt-trait__wrp-autoplay,
+    .gjs-trt-trait__wrp-loop,
+    .gjs-trt-trait__wrp-controls {
+        margin-top: 15px;
+
+        .gjs-label-wrp {
+            width: min-content;
+            margin: 0;
+            padding: 0;
+        }
+
+        .gjs-trt-trait {
+            display: flex !important;
+            flex-direction: row !important;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+    }
+
+    .gjs-trt-trait__wrp-zoom {
+        .gjs-field-range {
+            padding: 6px 0px;
+        }
+    }
+}
+
+.traits-description {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 13px;
+    padding: 0px 20px;
+    font-weight: 600;
+    line-height: 1.6;
+}

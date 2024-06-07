@@ -76,12 +76,16 @@
               </div>
               <div class="item-manage" v-show="currentTab === 'Properties'">
                 <div id="traits-container"></div>
+                <p class="traits-description" v-if="!component">
+                  Hãy chọn một thành phần để chỉnh sửa thuộc tính
+                </p>
               </div>
               <div class="item-manage" v-show="currentTab === 'Layers'">
                 <div id="layers-container"></div>
               </div>
               <div class="item-manage" v-show="currentTab === 'Blocks'">
                 <div id="dev"></div>
+                <div id="blocks"></div>
               </div>
             </div>
           </SidebarRight>
@@ -89,7 +93,8 @@
       </template>
     </MainLayout>
     <div id="nam"></div>
-    <div id="blocks"></div>
+    <!-- <div id="blocks"></div> -->
+
   </div>
 </template>
 
@@ -97,12 +102,27 @@
 <script>
 import grapesjs from "grapesjs";
 import "grapesjs/dist/css/grapes.min.css";
+import "grapick/dist/grapick.min.css";
+
 import presetWebpage from "grapesjs-preset-webpage";
 import formPlugin from "grapesjs-plugin-forms";
 import basicPlugin from "grapesjs-blocks-basic";
 import customCodePlugin from "grapesjs-custom-code";
 import grapesjsTabs from "grapesjs-tabs";
 import grapesjsClick from "grapesjs-click";
+import grapesjsTuiImageEditor from "grapesjs-tui-image-editor";
+import grapesjsStyleGradient from "grapesjs-style-gradient";
+import pluginCountdown from "grapesjs-component-countdown";
+import pluginTooltip from "grapesjs-tooltip";
+import grapesjsBlocksFlexbox from "grapesjs-blocks-flexbox";
+import styleFilter from "grapesjs-style-filter";
+import grapesjsStyleBg from "grapesjs-style-bg";
+import grapesjsTouch from "grapesjs-touch";
+import grapesjsPluginCkeditor from "grapesjs-plugin-ckeditor";
+import grapesjsNavbar from "grapesjs-navbar";
+import parserPostCSS from "grapesjs-parser-postcss";
+import grapesjsTyped from "grapesjs-typed";
+
 import MainLayout from "./MainLayout.vue";
 import HeaderComponent from "./HeaderComponent.vue";
 import SidebarLeft from "./SidebarLeft.vue";
@@ -115,11 +135,13 @@ import {
   PencilLine,
   Save,
 } from "lucide-vue";
+
+import "./graperCss/main.scss";
 import "./graperCss/panelManage.scss";
 import "./graperCss/blockManage.scss";
 import "./graperCss/layerManage.scss";
 import "./graperCss/styleManage.scss";
-import "./graperCss/main.scss";
+import "./graperCss/trainManage.scss";
 
 export default {
   name: "GrapesEditor",
@@ -221,74 +243,74 @@ export default {
       },
       styleManager: {
         appendTo: "#style-manager-container",
-        sectors: [
-          {
-            name: "Thiết lập chung",
-            open: true,
-            buildProps: [
-              "float",
-              "display",
-              "position",
-              "top",
-              "right",
-              "left",
-              "bottom",
-            ],
-          },
-          {
-            name: "Bố trí",
-            open: false,
-            buildProps: [
-              "width",
-              "height",
-              "max-width",
-              "min-height",
-              "margin",
-              "padding",
-            ],
-          },
-          {
-            name: "Kiểu chữ",
-            open: false,
-            buildProps: [
-              "font-family",
-              "font-size",
-              "font-weight",
-              "letter-spacing",
-              "color",
-              "line-height",
-              "text-align",
-              "text-shadow",
-            ],
-          },
-          {
-            name: "Trang trí",
-            open: false,
-            buildProps: [
-              "border-radius-c",
-              "background-color",
-              "border-radius",
-              "border",
-              "box-shadow",
-              "background",
-            ],
-          },
-          {
-            name: "Thêm",
-            open: false,
-            buildProps: ["opacity", "transition", "perspective", "transform"],
-            properties: [
-              {
-                type: "slider",
-                property: "opacity",
-                defaults: 1,
-                step: 0.01,
-                max: 1,
-                min: 0,
-              },
-            ],
-          },
-        ],
+        // sectors: [
+        //   {
+        //     name: "Thiết lập chung",
+        //     open: true,
+        //     buildProps: [
+        //       "float",
+        //       "display",
+        //       "position",
+        //       "top",
+        //       "right",
+        //       "left",
+        //       "bottom",
+        //     ],
+        //   },
+        //   {
+        //     name: "Bố trí",
+        //     open: false,
+        //     buildProps: [
+        //       "width",
+        //       "height",
+        //       "max-width",
+        //       "min-height",
+        //       "margin",
+        //       "padding",
+        //     ],
+        //   },
+        //   {
+        //     name: "Kiểu chữ",
+        //     open: false,
+        //     buildProps: [
+        //       "font-family",
+        //       "font-size",
+        //       "font-weight",
+        //       "letter-spacing",
+        //       "color",
+        //       "line-height",
+        //       "text-align",
+        //       "text-shadow",
+        //     ],
+        //   },
+        //   {
+        //     name: "Trang trí",
+        //     open: false,
+        //     buildProps: [
+        //       "border-radius-c",
+        //       "background-color",
+        //       "border-radius",
+        //       "border",
+        //       "box-shadow",
+        //       "background",
+        //     ],
+        //   },
+        //   {
+        //     name: "Thêm",
+        //     open: false,
+        //     buildProps: ["opacity", "transition", "perspective", "transform"],
+        //     properties: [
+        //       {
+        //         type: "slider",
+        //         property: "opacity",
+        //         defaults: 1,
+        //         step: 0.01,
+        //         max: 1,
+        //         min: 0,
+        //       },
+        //     ],
+        //   },
+        // ],
       },
       layerManager: {
         appendTo: "#layers-container",
@@ -306,6 +328,18 @@ export default {
         customCodePlugin,
         grapesjsTabs,
         grapesjsClick,
+        grapesjsTuiImageEditor,
+        grapesjsStyleGradient,
+        pluginCountdown,
+        pluginTooltip,
+        grapesjsBlocksFlexbox,
+        styleFilter,
+        grapesjsStyleBg,
+        grapesjsTouch,
+        grapesjsPluginCkeditor,
+        grapesjsNavbar,
+        parserPostCSS,
+        grapesjsTyped,
       ],
       pluginsOpts: {
         [basicPlugin]: {
@@ -322,7 +356,7 @@ export default {
             "quote",
           ],
           addBasicStyle: true,
-          category: "",
+          category: "Basic",
           labelColumn1: "1 Cột",
           labelColumn2: "2 Cột",
           labelColumn3: "3 Cột",
@@ -334,49 +368,93 @@ export default {
           labelMap: "Bản đồ",
         },
         [formPlugin]: {
-          category: "",
+          category: "Basic",
         },
         [presetWebpage]: {
-          category: "",
+          category: "Basic",
         },
         [customCodePlugin]: {
+          category: "Basic",
           modalTitle: "Chỉnh sửa code",
         },
-        [grapesjsTabs]: {},
-      },
-    });
-
-
-    this.editor.Blocks.add('button', {
-        category: '',
-        label: 'Button',
-        media: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pin"><line x1="12" x2="12" y1="17" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>',
-        content: {
-            type: 'button',
-            content: '<span>Button 2</span>',
-            attributes: { type: 'button', class: 'btn btn-primary' }
+        [grapesjsTabs]: {
+          category: "Basic",
         },
+        [grapesjsTuiImageEditor]: {
+          config: {
+            includeUI: {
+              initMenu: "filter",
+            },
+          },
+        },
+        [grapesjsStyleGradient]: {
+          colorPicker: "default",
+          grapickOpts: {
+            min: 1,
+            max: 99,
+          },
+        },
+        [pluginCountdown]: {
+          /* options */
+        },
+        [pluginTooltip]: {
+          /* options */
+        },
+        [grapesjsBlocksFlexbox]: {
+          /* options */
+        },
+        [styleFilter]: {
+          /* options */
+        },
+        [grapesjsStyleBg]: {
+          /* options */
+        },
+        [grapesjsTouch]: {
+          /* options */
+        },
+        [grapesjsPluginCkeditor]: {
+          /* options */
+        },
+        [grapesjsNavbar]: {
+          /* options */
+        },
+        [parserPostCSS]: {
+          /* options */
+        },
+        [grapesjsTyped]: {
+          /* options */
+        },
+      },
+      grapickOpts: {},
     });
 
-    // const demo = this.editor.StyleManager.getSector("general").set({
-    //   name: "Nam",
-    // });
-    // console.log(demo);
-    // this.editor.StyleManager.getProperty("general", "display").set({
-    //   name: "Kiểu",
-    // });
+
+    // Add the new background-image bulti-in type
+    this.editor.StyleManager.addProperty("decorations", {
+      extend: "background-image", // <- extend the built-in type
+      name: "Gradient Background",
+    });
+
+    this.editor.StyleManager.addProperty("extra", { extend: "filter" });
+    this.editor.StyleManager.addProperty("extra", {
+      extend: "filter",
+      property: "backdrop-filter",
+    });
+
+
+    const customIconArr = document.querySelectorAll(".gjs-field-arrows");
+    customIconArr.forEach((icon) => {
+      icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevrons-up-down"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>`;
+    });
 
     // ==============================================================
     const selectedWp = document.querySelector(".title-secleced");
     this.editor.on("component:selected", (component) => {
-      const HtmlSelected = this.editor.getHtml();
-      const CssSelected = this.editor.getCss();
-      console.log(HtmlSelected);
-      console.log(CssSelected);
-
+      console.log(component);
       if (this.currentTab == "Blocks") {
         this.currentTab = "Styles";
       }
+
       this.component = component;
       selectedWp.classList.add("active");
       component.on("change:custom-name", () => {
@@ -386,11 +464,11 @@ export default {
     });
 
     // ==============================================================
-    const devElement = document.getElementById("dev");
-    const blockElement = document.querySelectorAll(".gjs-block");
-    blockElement.forEach((element) => {
-      devElement.appendChild(element);
-    });
+    // const devElement = document.getElementById("dev");
+    // const blockElement = document.querySelectorAll(".gjs-block");
+    // blockElement.forEach((element) => {
+    //   devElement.appendChild(element);
+    // });
 
     const undoBtn = document.getElementById("undo-btn");
     const redoBtn = document.getElementById("redo-btn");

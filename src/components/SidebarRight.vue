@@ -115,6 +115,7 @@ export default {
   padding-top: 0px;
   padding-bottom: 50px;
   background: #fff;
+  position: relative;
   &::-webkit-scrollbar {
     width: 0px;
   }

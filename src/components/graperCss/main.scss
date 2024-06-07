@@ -70,70 +70,12 @@ button.active {
     justify-content: start;
 }
 
-
-#traits-container {
-    .gjs-trt-trait {
-        display: flex;
-        flex-direction: column;
-        margin-top: 5px;
-
-        .gjs-label-wrp {
-            width: 100%;
-
-            .gjs-label {
-                font-size: 12px;
-                font-weight: 700;
-                margin-top: 5px;
-                margin-bottom: 2px;
-                margin-left: 1px;
-            }
-        }
-
-        .gjs-field-wrp {
-            width: 100%;
-        }
-
-        .gjs-field-checkbox {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .gjs-field-checkbox {
-            color: #000;
-        }
-    }
-
-    select,
-    input {
-        margin-left: 7px !important;
-        font-size: 12px;
-        font-weight: 500;
-    }
-
-    .gjs-trt-trait {
-        padding: 0;
-    }
-}
-
 .gjs-clm-tags {
     padding: 0px 0px;
     padding-top: 8px;
 }
 
-.gjs-selected .gjs-layer-item {
-    background-color: #FAF3F3 !important;
-}
 
-.gjs-three-bg {
-    background-color: #e2d4d4 !important;
-    color: #000;
-
-    svg {
-        fill: #000;
-    }
-}
 
 .gjs-clm-tags #gjs-clm-tags-field {
     padding: 0;
@@ -202,3 +144,6 @@ button.active {
 
 
 
+.gjs-rte-toolbar{
+    width: 530px;
+}

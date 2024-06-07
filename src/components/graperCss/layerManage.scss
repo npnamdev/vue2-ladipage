@@ -1,25 +1,39 @@
-.gjs-layer-item {
-    height: 36px;
-    color: black;
-    border-bottom: 1px solid #e7dede;
-}
-
-.gjs-layer-name {
-    color: black;
-    font-weight: 700;
-    letter-spacing: 0
-}
-
-
-.gjs-layers{
-    height: auto!important;
-}
-
-
-#layers-container{
+#layers-container {
     margin-top: 5px;
+
+    .gjs-layer-item {
+        height: 36px;
+        color: black;
+        border-bottom: 1px solid #e7dede;
+    }
+
+    .gjs-layer-name {
+        color: black;
+        font-weight: 700;
+        letter-spacing: 0
+    }
+
+
+    .gjs-layers {
+        height: auto !important;
+    }
+
+    .gjs-layer-name {
+        text-transform: capitalize;
+    }
+
+    .gjs-selected .gjs-layer-item {
+        background-color: #FAF3F3 !important;
+    }
+
+    .gjs-three-bg {
+        background-color: #e2d4d4 !important;
+        color: #000;
+
+        svg {
+            fill: #000;
+        }
+    }
 }
 
-.gjs-layer-name{
-    text-transform: capitalize;
-}
+

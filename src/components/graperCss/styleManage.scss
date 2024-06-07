@@ -1,5 +1,19 @@
 #style-manager-container{
     margin-top: 5px;
+
+    .gjs-radio-item{
+        &:nth-child(2), &:nth-child(3){
+            border-left: 1px solid rgb(226, 217, 217)!important;
+        }
+
+        &:hover{
+            background-color: #f1eaea;
+        }
+    }
+
+    .gjs-radio-item-label:hover {
+        background-color: transparent!important;
+    }
 }
 
 .gjs-sm-sector {
@@ -203,3 +217,109 @@
 .gjs-radio-item{
     padding: 7px 0px;
 }
+
+#gjs-sm-input-holder{
+    width: 100%;
+    select{
+        option {
+            background-color: rgb(233, 233, 241);
+            color: black !important;
+            font-weight: 600;
+            padding: 20px;
+        }
+    }
+}
+
+.gjs-field-units{
+    .gjs-input-unit{
+        font-weight: 600;
+        option {
+            background-color: rgb(233, 233, 241);
+            color: black !important;
+            font-weight: 600;
+            padding: 20px;
+        }
+    }
+}
+
+.gjs-sm-label{
+    margin-top: 10px!important;
+    display: flex;
+    justify-content: space-between;
+}
+
+.gjs-sm-property__border-radius{
+    width: 100%;
+}
+
+.gjs-field-arrows{
+    margin-right: 3px;
+    svg{
+       margin-top: 4px;
+       }
+}
+
+.gjs-clm-header-label{
+    font-weight: 700;
+}
+
+#gjs-clm-states{
+    font-weight: 700;
+    font-size: 12px;
+    padding: 0px 5px;
+    text-align: center;
+    option {
+        background-color: rgb(233, 233, 241);
+        color: black !important;
+        font-weight: 600;
+        padding: 20px;
+    }
+}
+
+.sp-button-container{
+    display: flex;
+    justify-content: space-between;
+
+    &::after{
+        display: none;
+    }
+    .sp-choose{
+        border: none;
+        color: #fff!important;
+        font-size: 12px;
+        padding: 6px 10px!important;
+        background-color: blue!important;
+        &:hover{
+            border: none;
+            border-bottom: none;
+        }
+    }
+}
+
+#gjs-sm-input-holder{
+    select{
+        color: black;
+        font-weight: 600;
+        font-size: 12px;
+    }
+}
+
+.grp-wrapper{
+    border: 1px solid yellow;
+}
+
+.sp-container{
+    right: 30px!important;
+    left: auto!important;
+    width: 200px
+}
+
+.gjs-sm-field.gjs-sm-composite{
+    background-color: #fff!important;
+}
+
+.gjs-sm-layers{
+    overflow: hidden;
+}
+
+
