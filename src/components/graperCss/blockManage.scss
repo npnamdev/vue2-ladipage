@@ -26,5 +26,48 @@
 }
 
 #blocks{
+    .gjs-blocks-c{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-top: 10px;
+        padding: 15px 0px;
+        margin-top: 0;
+    }
+
     // display: none;
+    .gjs-block{
+        width: 100%;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border-radius: 10px;
+        box-shadow: none;
+
+        .gjs-block__media{
+            width: 25px;
+            margin: 0px auto;
+        }
+
+        .gjs-block-label{
+            font-weight: 700;
+            letter-spacing: 0px!important;
+        }
+    }
+
+    .gjs-title{
+        background-color: #FAF3F3;
+        border: none;
+        font-size: 13px;
+        letter-spacing: 0;
+        font-weight: 700;
+        border-radius: 5px;
+        padding: 8px 15px;
+    }
+
+    .gjs-block-category.gjs-open, .gjs-sm-sector.gjs-sm-open, .gjs-trait-category.gjs-open {
+        border: none;
+    }
 }

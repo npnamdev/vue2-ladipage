@@ -60,12 +60,12 @@
 
             <div class="tab-buttons">
               <button
-                v-for="tab in tabs"
-                :key="tab"
+                v-for="(tab, index) in tabs"
+                :key="index"
                 @click="selectTab(tab.type)"
                 :class="{ active: currentTab === tab.type }"
               >
-                <icon :is="tab.icon" class="icon" stroke-width="1.5" />
+                <icon :is="tab.icon" class="icon" :strokeWidth="1.5" />
                 <span>{{ tab.title }}</span>
               </button>
             </div>
@@ -92,9 +92,6 @@
         </div>
       </template>
     </MainLayout>
-    <div id="nam"></div>
-    <!-- <div id="blocks"></div> -->
-
   </div>
 </template>
 
@@ -122,7 +119,6 @@ import grapesjsPluginCkeditor from "grapesjs-plugin-ckeditor";
 import grapesjsNavbar from "grapesjs-navbar";
 import parserPostCSS from "grapesjs-parser-postcss";
 import grapesjsTyped from "grapesjs-typed";
-
 import MainLayout from "./MainLayout.vue";
 import HeaderComponent from "./HeaderComponent.vue";
 import SidebarLeft from "./SidebarLeft.vue";
@@ -145,6 +141,15 @@ import "./graperCss/trainManage.scss";
 
 export default {
   name: "GrapesEditor",
+  components: {
+    MainLayout,
+    HeaderComponent,
+    SidebarLeft,
+    SidebarRight,
+    PencilRuler,
+    PencilLine,
+    Save,
+  },
   data() {
     return {
       tabs: [
@@ -210,15 +215,6 @@ export default {
       });
     },
   },
-  components: {
-    MainLayout,
-    HeaderComponent,
-    SidebarLeft,
-    SidebarRight,
-    PencilRuler,
-    PencilLine,
-    Save,
-  },
   mounted() {
     document.addEventListener("mousedown", this.handleClickOutside);
     this.editor = grapesjs.init({
@@ -243,74 +239,74 @@ export default {
       },
       styleManager: {
         appendTo: "#style-manager-container",
-        // sectors: [
-        //   {
-        //     name: "Thiết lập chung",
-        //     open: true,
-        //     buildProps: [
-        //       "float",
-        //       "display",
-        //       "position",
-        //       "top",
-        //       "right",
-        //       "left",
-        //       "bottom",
-        //     ],
-        //   },
-        //   {
-        //     name: "Bố trí",
-        //     open: false,
-        //     buildProps: [
-        //       "width",
-        //       "height",
-        //       "max-width",
-        //       "min-height",
-        //       "margin",
-        //       "padding",
-        //     ],
-        //   },
-        //   {
-        //     name: "Kiểu chữ",
-        //     open: false,
-        //     buildProps: [
-        //       "font-family",
-        //       "font-size",
-        //       "font-weight",
-        //       "letter-spacing",
-        //       "color",
-        //       "line-height",
-        //       "text-align",
-        //       "text-shadow",
-        //     ],
-        //   },
-        //   {
-        //     name: "Trang trí",
-        //     open: false,
-        //     buildProps: [
-        //       "border-radius-c",
-        //       "background-color",
-        //       "border-radius",
-        //       "border",
-        //       "box-shadow",
-        //       "background",
-        //     ],
-        //   },
-        //   {
-        //     name: "Thêm",
-        //     open: false,
-        //     buildProps: ["opacity", "transition", "perspective", "transform"],
-        //     properties: [
-        //       {
-        //         type: "slider",
-        //         property: "opacity",
-        //         defaults: 1,
-        //         step: 0.01,
-        //         max: 1,
-        //         min: 0,
-        //       },
-        //     ],
-        //   },
-        // ],
+        sectors: [
+          {
+            name: "Thiết lập chung",
+            open: true,
+            buildProps: [
+              "float",
+              "display",
+              "position",
+              "top",
+              "right",
+              "left",
+              "bottom",
+            ],
+          },
+          {
+            name: "Bố trí",
+            open: false,
+            buildProps: [
+              "width",
+              "height",
+              "max-width",
+              "min-height",
+              "margin",
+              "padding",
+            ],
+          },
+          {
+            name: "Kiểu chữ",
+            open: false,
+            buildProps: [
+              "font-family",
+              "font-size",
+              "font-weight",
+              "letter-spacing",
+              "color",
+              "line-height",
+              "text-align",
+              "text-shadow",
+            ],
+          },
+          {
+            name: "Trang trí",
+            open: false,
+            buildProps: [
+              "border-radius-c",
+              "background-color",
+              "border-radius",
+              "border",
+              "box-shadow",
+              "background",
+            ],
+          },
+          {
+            name: "Thêm",
+            open: false,
+            buildProps: ["opacity", "transition", "perspective", "transform"],
+            properties: [
+              {
+                type: "slider",
+                property: "opacity",
+                defaults: 1,
+                step: 0.01,
+                max: 1,
+                min: 0,
+              },
+            ],
+          },
+        ],
       },
       layerManager: {
         appendTo: "#layers-container",
@@ -426,8 +422,77 @@ export default {
         },
       },
       grapickOpts: {},
+      deviceManager: {
+        devices: [
+          {
+            name: "Mobile",
+            width: "360",
+          },
+          {
+            name: "Tablet",
+            width: "720",
+          },
+          {
+            name: "Desktop",
+            width: "100%",
+          },
+        ],
+      },
     });
 
+    this.editor.Commands.add("set-device-desktop", {
+      run: (editor) => editor.setDevice("Desktop"),
+    });
+
+    this.editor.Commands.add("set-device-tablet", {
+      run: (editor) => editor.setDevice("Tablet"),
+    });
+
+    this.editor.Commands.add("set-device-mobile", {
+      run: (editor) => editor.setDevice("Mobile"),
+    });
+
+    const desktopBtn = document.querySelector("#desktop");
+    const tabletBtn = document.querySelector("#tablet");
+    const mobileBtn = document.querySelector("#mobile");
+
+    const switchToDesktopView = () => {
+        this.editor.Commands.run("set-device-desktop");
+        mobileBtn.classList.remove("active");
+        tabletBtn.classList.remove("active");
+        desktopBtn.classList.add("active");
+    };
+    switchToDesktopView();
+
+
+    const switchToTabletView = () => {
+        this.editor.Commands.run("set-device-tablet");
+        desktopBtn.classList.remove("active");
+        mobileBtn.classList.remove("active");
+        tabletBtn.classList.add("active");
+    };
+
+    const switchToMobileView = () => {
+        this.editor.Commands.run("set-device-mobile");
+        desktopBtn.classList.remove("active");
+        tabletBtn.classList.remove("active");
+        mobileBtn.classList.add("active");
+    };
+
+
+    desktopBtn.addEventListener("click", switchToDesktopView);
+    tabletBtn.addEventListener("click", switchToTabletView);
+    mobileBtn.addEventListener("click", switchToMobileView);
+
+    // ============================
+
+    this.editor.BlockManager.add("test-component", {
+      type: "text",
+      label: "Test Component",
+      content: `<div data-gjs-type="test-component">
+        <span>sdfdsfd</span>
+      </div>`,
+    });
 
     // Add the new background-image bulti-in type
     this.editor.StyleManager.addProperty("decorations", {
@@ -441,11 +506,10 @@ export default {
       property: "backdrop-filter",
     });
 
-
-    const customIconArr = document.querySelectorAll(".gjs-field-arrows");
-    customIconArr.forEach((icon) => {
-      icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevrons-up-down"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>`;
-    });
+    // const customIconArr = document.querySelectorAll(".gjs-field-arrows");
+    // customIconArr.forEach((icon) => {
+    //   icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevrons-up-down"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>`;
+    // });
 
     // ==============================================================
     const selectedWp = document.querySelector(".title-secleced");
@@ -454,7 +518,6 @@ export default {
       if (this.currentTab == "Blocks") {
         this.currentTab = "Styles";
       }
-
       this.component = component;
       selectedWp.classList.add("active");
       component.on("change:custom-name", () => {

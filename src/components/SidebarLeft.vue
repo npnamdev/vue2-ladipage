@@ -9,7 +9,7 @@
     </div>
     <ul class="list-menu">
       <li @click="toggleMenu('imageDown')">
-        <ImageDown class="icon" />
+        <ImageDown class="icon" :strokeWidth="1.5"/>
         <ul v-if="openMenu === 'imageDown'" class="list-sub-menu">
           <li>menu1</li>
           <li>menu2</li>
@@ -18,31 +18,31 @@
       </li>
 
       <li @click="toggleMenu('')">
-        <Type class="icon" />
+        <Type class="icon" :strokeWidth="1.5"/>
       </li>
 
       <li @click="toggleMenu('')">
-        <TextQuote class="icon" />
+        <TextQuote class="icon" :strokeWidth="1.5"/>
       </li>
 
       <li @click="toggleMenu('')">
-        <SquareMousePointer class="icon" />
+        <SquareMousePointer class="icon" :strokeWidth="1.5"/>
       </li>
 
       <li @click="toggleMenu('')">
-        <Shapes class="icon" />
+        <Shapes class="icon" :strokeWidth="1.5"/>
       </li>
 
       <li @click="toggleMenu('')">
-        <Star class="icon" />
+        <Star class="icon" :strokeWidth="1.5"/>
       </li>
 
       <li @click="toggleMenu('')">
-        <Clapperboard class="icon" />
+        <Clapperboard class="icon" :strokeWidth="1.5"/>
       </li>
 
       <li @click="toggleMenu('circlePlus')">
-        <CirclePlus class="icon" />
+        <CirclePlus class="icon" :strokeWidth="1.5"/>
         <ul v-if="openMenu === 'circlePlus'" class="list-sub-menu">
           <li>menu4</li>
           <li>menu5</li>

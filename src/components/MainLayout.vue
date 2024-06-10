@@ -9,7 +9,7 @@
     />
     <slot name="sidebarLeft" />
     <button id="reset-btn">
-      <EyeOff class="icon" />
+      <EyeOff class="icon" :strokeWidth="1.5"/>
     </button>
     <slot
       name="content"

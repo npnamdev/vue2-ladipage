@@ -4,56 +4,113 @@
       <img src="../assets/logo.svg" class="logo" />
       <ul class="icon-header-action">
         <li class="active">
-          <Plus class="icon active" stroke-width="1.5"/>
+          <Plus class="icon active" :strokeWidth="1.5" />
         </li>
         <li>
-          <Layers class="icon" stroke-width="1.5"/>
+          <Layers class="icon" :strokeWidth="1.5" />
         </li>
         <li>
-          <LayoutPanelTop class="icon" stroke-width="1.5"/>
+          <LayoutPanelTop class="icon" :strokeWidth="1.5" />
         </li>
         <li>
-          <Settings class="icon" stroke-width="1.5"/>
+          <Settings class="icon" :strokeWidth="1.5" />
         </li>
       </ul>
     </div>
 
     <ul class="header-center">
-      <li>
-        <MonitorDot class="icon" stroke-width="1.5"/>
+      <li id="desktop">
+        <MonitorDot class="icon" :strokeWidth="1.5" />
       </li>
-      <li>
-        <Tablet class="icon" stroke-width="1.5"/>
+      <li id="tablet">
+        <Tablet class="icon" :strokeWidth="1.5" />
+      </li>
+      <li id="mobile">
+        <TabletSmartphone class="icon" :strokeWidth="1.5" />
       </li>
     </ul>
 
     <div class="header-right">
       <ul class="list-item">
-        <li v-for="(icon, index) in icons" :key="index" @click="icon.method" :id="icon.id">
-          <component :is="icon.component" class="icon" stroke-width="1.5" />
+        <li
+          v-for="(icon, index) in icons"
+          :key="index"
+          @click="icon.method"
+          :id="icon.id"
+        >
+          <component :is="icon.component" class="icon" :strokeWidth="1.5" />
         </li>
       </ul>
-      <SlidersVertical class="icon" @click="toggleBox" stroke-width="1.5" :class="isBoxHidden && 'active'"/>
+      <div class="list-btn">
+        <button id="preview-btn" class="btn-view" >Xem trước</button>
+        <button class="btn-export">Lưu và xuất bản</button>
+      </div>
+      <SlidersVertical
+        class="icon"
+        @click="toggleBox"
+        :strokeWidth="1.5"
+        :class="isBoxHidden && 'active'"
+      />
     </div>
   </header>
 </template>
 
 <script>
-import { RotateCcw, RotateCw, Trash2, Grid2X2, Code, Eye, SlidersVertical, PaintBucket, Palette, GitCompare, Layers, Wrench, Maximize, LayoutPanelTop , Plus, Settings, MonitorDot, Tablet} from "lucide-vue";
+import {
+  Undo2,
+  Redo2,
+  Eraser,
+  Grid2X2,
+  FileScan,
+  ScanEye,
+  SlidersVertical,
+  PaintBucket,
+  Palette,
+  GitCompare,
+  Layers,
+  Wrench,
+  Expand,
+  LayoutPanelTop,
+  Plus,
+  Settings,
+  MonitorDot,
+  Tablet,
+  TabletSmartphone,
+} from "lucide-vue";
 
 export default {
   props: ["toggleBox", "isBoxHidden", "openFullscreen"],
-  components: { RotateCcw, RotateCw, Trash2, Grid2X2, Code, Eye, SlidersVertical, PaintBucket, Palette, GitCompare, Layers, Wrench, Maximize, LayoutPanelTop, Plus, Settings, MonitorDot, Tablet},
+  components: {
+    Undo2,
+    Redo2,
+    Eraser,
+    Grid2X2,
+    FileScan,
+    ScanEye,
+    SlidersVertical,
+    PaintBucket,
+    Palette,
+    GitCompare,
+    Layers,
+    Wrench,
+    Expand,
+    LayoutPanelTop,
+    Plus,
+    Settings,
+    MonitorDot,
+    Tablet,
+    TabletSmartphone,
+  },
   data() {
     return {
       icons: [
-        { component: RotateCcw, method: this.handleAirplay, id: "undo-btn"},
-        { component: RotateCw, method: this.handleCircleHelp, id: "redo-btn"},
-        { component: Trash2, method: this.handlePaintRoller, id: "clear-btn"},
+        { component: Undo2, method: this.handleAirplay, id: "undo-btn" },
+        { component: Redo2, method: this.handleCircleHelp, id: "redo-btn" },
+        { component: Eraser, method: this.handlePaintRoller, id: "clear-btn" },
         { component: Grid2X2, method: this.handleBug, id: "outline-btn" },
-        { component: Maximize, method: this.openFullscreen },
-        { component: Code, method: this.handleBook, id: "code-btn" },
-        { component: Eye, method: this.handleSettings, id: "preview-btn"},
+        { component: Expand, method: this.openFullscreen },
+        { component: FileScan, method: this.handleBook, id: "code-btn" },
+        // { component: ScanEye, method: this.handleSettings, id: "preview-btn" },
 
         // { component: Layers, method: this.handleLayers },
         // { component: PaintBucket, method: this.handlePaintBucket, id: "reset-btn2" },
@@ -65,54 +122,54 @@ export default {
   },
   methods: {
     handleAirplay() {
-      console.log('Airplay icon clicked');
+      console.log("Airplay icon clicked");
       // Add your custom method logic here
     },
     handleCircleHelp() {
-      console.log('CircleHelp icon clicked');
+      console.log("CircleHelp icon clicked");
       // Add your custom method logic here
     },
     handlePaintRoller() {
-      console.log('PaintRoller icon clicked');
+      console.log("PaintRoller icon clicked");
       // Add your custom method logic here
     },
     handleBug() {
-      console.log('Bug icon clicked');
+      console.log("Bug icon clicked");
       // Add your custom method logic here
     },
     handleBook() {
-      console.log('Book icon clicked');
+      console.log("Book icon clicked");
       // Add your custom method logic here
     },
     handleSettings() {
-      console.log('Settings icon clicked');
+      console.log("Settings icon clicked");
       // Add your custom method logic here
     },
     handlePaintBucket() {
-      console.log('PaintBucket icon clicked');
+      console.log("PaintBucket icon clicked");
       // Add your custom method logic here
     },
     handlePalette() {
-      console.log('Palette icon clicked');
+      console.log("Palette icon clicked");
       // Add your custom method logic here
     },
     handleGitCompare() {
-      console.log('GitCompare icon clicked');
+      console.log("GitCompare icon clicked");
       // Add your custom method logic here
     },
     handleLayers() {
-      console.log('Layers icon clicked');
+      console.log("Layers icon clicked");
       // Add your custom method logic here
     },
     handleWrench() {
-      console.log('Wrench icon clicked');
+      console.log("Wrench icon clicked");
       // Add your custom method logic here
     },
     handlePencilRuler() {
-      console.log('PencilRuler icon clicked');
+      console.log("PencilRuler icon clicked");
       // Add your custom method logic here
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -126,7 +183,7 @@ export default {
   padding: 0px 20px;
   border-bottom: 1px solid #e9e9e9;
 
-  &.active{
+  &.active {
     display: none;
   }
 
@@ -135,16 +192,16 @@ export default {
     gap: 30px;
   }
 
-  .header-right{
+  .header-right {
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 20px;
   }
 
   .logo {
     width: 30px;
   }
-  .icon-header-action{
+  .icon-header-action {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -162,16 +219,16 @@ export default {
       &:nth-child(2) {
         margin-left: 3px;
       }
-      &.active{
-        background-color: #F1F3F4;
-        .icon{
-          color: #3b09ee;
+      &.active {
+        background-color: #f1f3f4;
+        .icon {
+          color: #1A56DB;
         }
       }
     }
   }
 
-  .header-center{
+  .header-center {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -186,10 +243,10 @@ export default {
       justify-content: center;
       align-items: center;
       border-radius: 4px;
-      &.active{
-        background-color: #F1F3F4;
-        .icon{
-          color: #3b09ee;
+      &.active {
+        background-color: #f1f3f4;
+        .icon {
+          color: #1A56DB;
         }
       }
     }
@@ -212,11 +269,11 @@ export default {
       justify-content: center;
       align-items: center;
       border-radius: 4px;
-      &.active{
-          background-color: #F1F3F4;
+      &.active {
+        background-color: #f1f3f4;
 
-        .icon{
-          color: #3b09ee;
+        .icon {
+          color: #1A56DB;
         }
       }
     }
@@ -226,10 +283,36 @@ export default {
     color: #000000;
     cursor: pointer;
     &:hover {
-      color: #0881fc;
+      color: #1A56DB;
     }
     &.active {
-      color: #0881fc;
+      color: #1A56DB;
+    }
+  }
+
+  .list-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    button {
+      padding: 7px 10px;
+      border: none;
+      font-size: 12.5px;
+      &:hover {
+        color: #1A56DB;
+      }
+    }
+
+    .btn-export {
+      background-color: #1A56DB;
+      border-radius: 3px;
+      color: #fff;
+      font-weight: 500;
+      padding: 7px 15px;
+      margin-left: 5px;
+      &:hover {
+        color: #fff;
+      }
     }
   }
 }
